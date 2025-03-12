@@ -43,8 +43,8 @@ const Form = () => {
     highlightMode: "word" 
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    if (!formData.query.trim()) return; 
     try {
       const response = await axios.post(
         `http://127.0.0.1:8000/tutor/query?question=${encodeURIComponent(formData.query)}`
@@ -57,7 +57,7 @@ const Form = () => {
       alert('Failed to submit form');
     }
   };
-  
+
   const {
     error,
     interimResult,
@@ -78,15 +78,29 @@ const Form = () => {
     }
   }, [interimResult]);
 
-  // useEffect(() => {
-  //   start();
-  // }, [res]);
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
+  const handleButtonClick = () => {
+    if (isRecording) {
+      stopSpeechToText(); 
+      handleSubmit(); 
+    } else if (formData.query.trim()) {
+      handleSubmit(); 
+    } else {
+      startSpeechToText(); 
+    }
+  };
 
   if (error) return <p>Web Speech API is not available in this browser 🤷‍</p>;
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => e.preventDefault()}>
         <div>
           <label>Ques:</label>
           <input
@@ -94,10 +108,11 @@ const Form = () => {
             name="query"
             value={formData.query}
             onChange={handleChange}
+            onKeyDown={handleKeyDown}
             required
           />
-          <button type="button" onClick={isRecording ? stopSpeechToText : startSpeechToText}>
-            {isRecording ? 'Stop Recording' : 'Start Recording'}
+          <button type="button" onClick={handleButtonClick}>
+            {isRecording ? 'Stop & Submit' : formData.query ? 'Submit' : 'Start Recording'}
           </button>
         </div>
 
@@ -111,8 +126,6 @@ const Form = () => {
             ))}
           </select>
         </div>
-
-        <button type="submit">Submit</button>
       </form>
 
       <div>
@@ -120,7 +133,7 @@ const Form = () => {
         <p>{res}</p>
       </div>
 
-      {text ? (
+      {text && (
         <div style={{ margin: "1rem", whiteSpace: "pre-wrap" }}>
           <div style={{ display: "flex", columnGap: "1rem", marginBottom: "1rem" }}>
             <button disabled={speechStatus === "started"} onClick={start}>
@@ -134,7 +147,7 @@ const Form = () => {
             </button>
           </div>
         </div>
-      ) : null}
+      )}
     </>
   );
 };
