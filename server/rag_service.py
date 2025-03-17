@@ -27,18 +27,18 @@ def LLMresponse():
     print(llmtext)
 
 
-    prompt = f"""
-    You are an experienced Java developer with deep knowledge of object-oriented programming, design patterns, and best practices. 
-    Provide clear, detailed, and beginner-friendly explanations, focusing on helping the user understand the logic and structure of the code. 
-    question : {query} \n
-    context : {llmtext}
-    """
+    # prompt = f"""
+    # You are an experienced Java developer with deep knowledge of object-oriented programming, design patterns, and best practices. 
+    # Provide clear, detailed, and beginner-friendly explanations, focusing on helping the user understand the logic and structure of the code.  If asked for MCQs, you have to provide 4 options, and a correct answer.
+    # question : {query} \n
+    # context : {llmtext}
+    # """
 
-    response = client.models.generate_content(
-            model="gemini-2.0-flash", contents=prompt
-        )
+    # response = client.models.generate_content(
+    #         model="gemini-2.0-flash", contents=prompt
+    #     )
 
-    return response.text
+    # return response.text
 
 print(LLMresponse())
 

@@ -17,6 +17,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-speech-to-text": "^0.8.0",
+    "react-loader-spinner": "^6.1.6",
     "react-text-to-speech": "^1.4.1"
   },
   "devDependencies": {
